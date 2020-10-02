@@ -1,35 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Tile from '../Tile/Tile';
-import './Board.css'
+import './Board.css';
 
-class Board extends Component {
-    
-    renderTile = () => {
-        return <Tile />
-    }
+const Board = ({colors}) => {
+    const tile = colors.map((color, i) => {
+        return <Tile key={i} color={color} />
+    })
 
-    render () {
-        return (
-        <div className="board">
-            {this.renderTile()}
-            {this.renderTile()}
-            {this.renderTile()}
-            {this.renderTile()}
-            {this.renderTile()}
-            {this.renderTile()}
-            {this.renderTile()}
-            {this.renderTile()}
-            {this.renderTile()}
-            {this.renderTile()}
-            {this.renderTile()}
-            {this.renderTile()}
-            {this.renderTile()}
-            {this.renderTile()}
-            {this.renderTile()}
-            {this.renderTile()}
-        </div>
-        )
-    }
+    return <div className="board">{tile}</div>
 }
 
 export default Board;

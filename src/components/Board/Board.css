@@ -1,8 +1,10 @@
 .board {
-  width: 600px;
-  height: 600px;
-  margin: auto;
-  display: flex;
-  flex-wrap: wrap;
-  perspective: 1000px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    width: 600px;
+    height: 600px;
+    border: 2px solid black;
+    
 }

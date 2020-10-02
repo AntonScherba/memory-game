@@ -1,15 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './Tile.css';
 
-class Tile extends Component {
-    render() {
-      return (
-        <div className="tile">
-          <div className="front-face" >front</div>
-          <div className="back-face" >Back</div>
-        </div>
-      )
-    }
-}
-  
+const Tile = ({color}) => {
+  return (
+    <button className="tile" style={{background: color }}>Click</button>
+  )
+} 
+
 export default Tile;
