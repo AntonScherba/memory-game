@@ -9,6 +9,7 @@ class Board extends Component {
             grid: 8,
             colors: [],
             activeTiles: Array(16).fill(false),
+            openedTiles: []
         }
     }
 
@@ -41,21 +42,47 @@ class Board extends Component {
 
     handleClick(i) {
         const activeTiles = this.state.activeTiles.slice();
+        let openedTiles = this.state.openedTiles.slice();
+        
+        openedTiles.push(i);
         activeTiles[i] = !activeTiles[i];
+
         this.setState({ 
             activeTiles: activeTiles,
+            openedTiles: openedTiles
         });
+
+        if(openedTiles.length === 2) {
+            this.compareColors(openedTiles, activeTiles);
+            this.setState({
+                openedTiles: []
+            })
+        }
+    }
+
+    compareColors = (openedTiles, tiles) => {
+        let f = openedTiles[0];
+        let s = openedTiles[1];
+        
+        if (this.state.colors[f] !== this.state.colors[s]) {            
+            setTimeout(() => {
+                [tiles[f], tiles[s]] = [!tiles[f], !tiles[s]] 
+                this.setState({
+                    activeTiles: tiles
+                })
+            }, 1000)
+        }
     }
 
     renderTile = (colors) => {
         const tile = colors.map((color, i) => {
-            return <Tile key={i} color={color}  onClick={() => this.handleClick(i)} active={this.state.activeTiles[i]} />
+            return <Tile key={i} color={color}  onClick={(e) => this.handleClick(i)} active={this.state.activeTiles[i]} />
         });
 
         return tile;
     }
 
-    render() {      
+    render() {
         return (
             <div className="board">
                 {this.renderTile(this.state.colors)}
@@ -65,3 +92,4 @@ class Board extends Component {
 }
 
 export default Board;
+
