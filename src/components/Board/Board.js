@@ -3,89 +3,79 @@ import Tile from '../Tile/Tile';
 import './Board.css';
 
 class Board extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            grid: 8,
-            colors: [],
-            activeTiles: Array(16).fill(false),
-            openedTiles: []
+            tilesOnTheBoard: []
         }
     }
 
     // Fisher–Yates Shuffle
-    shuffleColors = (colors) => {
-        for (let i = colors.length - 1; i > 0; i--) {
+    shuffleColors = (tiles) => {
+        for (let i = tiles.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         // let t = array[i]; array[i] = array[j]; array[j] = t
-        [colors[i], colors[j]] = [colors[j], colors[i]];
+        [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
         }
     }
 
-    // Generator Random Number for Hue Color
-    generateColors = (numberOfColors) => {
-        let colorsArray = [];
-        for (let index = 0; index < numberOfColors; index++) {
-            const hueColor = index * 360/numberOfColors;
-            colorsArray.push(hueColor);
+    generateTiles= (gridSize) => {
+        let tilesOnTheBoard = [];
+        
+        for (let i = 0; i < gridSize[0]; i++) {
+            let tilesOnTheRow = [];
+            for (let j = 0; j < gridSize[1]; j++) {
+                const hueColor = j * 360/8;
+                let tile = {
+                    color: hueColor,
+                    isOpened:false
+                };
+                tilesOnTheRow.push(tile)
+            }
+            tilesOnTheBoard.push(tilesOnTheRow);
         }
-        // duplicate colors 
-        colorsArray = colorsArray.concat(colorsArray);
-        this.shuffleColors(colorsArray);
-
-        this.setState({colors: colorsArray});
+        this.setState({tilesOnTheBoard: tilesOnTheBoard}, () => {
+            // console.log('generate:', this.state.tilesOnTheBoard);
+        });
     }
 
     componentDidMount() {
-        this.generateColors(this.state.grid);
+        this.generateTiles(this.props.gridSize);
     }
 
-    handleClick(i) {
-        const activeTiles = this.state.activeTiles.slice();
-        let openedTiles = this.state.openedTiles.slice();
+    handleClick(i, j) { 
         
-        openedTiles.push(i);
-        activeTiles[i] = !activeTiles[i];
-
-        this.setState({ 
-            activeTiles: activeTiles,
-            openedTiles: openedTiles
-        });
-
-        if(openedTiles.length === 2) {
-            this.compareColors(openedTiles, activeTiles);
-            this.setState({
-                openedTiles: []
-            })
-        }
     }
 
-    compareColors = (openedTiles, tiles) => {
-        let f = openedTiles[0];
-        let s = openedTiles[1];
+    compareColors = (openedTiles, activeTiles) => {
+        let [f, s] = openedTiles;
         
         if (this.state.colors[f] !== this.state.colors[s]) {            
             setTimeout(() => {
-                [tiles[f], tiles[s]] = [!tiles[f], !tiles[s]] 
-                this.setState({
-                    activeTiles: tiles
-                })
+                [activeTiles[f], activeTiles[s]] = [!activeTiles[f], !activeTiles[s]] 
+                this.setState({ activeTiles: activeTiles })
             }, 1000)
         }
     }
 
-    renderTile = (colors) => {
-        const tile = colors.map((color, i) => {
-            return <Tile key={i} color={color}  onClick={(e) => this.handleClick(i)} active={this.state.activeTiles[i]} />
-        });
-
+    renderTile = (tilesOnTheBoard) => {
+        const tile = tilesOnTheBoard.map((tilesOnTheRow, i) => {
+            // console.log(i)
+            return tilesOnTheRow.map((tile, j) => {
+                return <Tile key={j} color={tile.color}  onClick={() => this.handleClick(i, j)} isOpened={this.state.tilesOnTheBoard[i][j].isOpened} />
+            }, i)
+        })
         return tile;
     }
 
     render() {
         return (
-            <div className="board">
-                {this.renderTile(this.state.colors)}
+            <div 
+                style={{
+                    gridTemplateColumns: `repeat(${this.props.gridSize[0]}, auto)`, 
+                    gridTemplateRows: `repeat(${this.props.gridSize[1]}, auto)`
+                }} 
+                className="board" >{this.renderTile(this.state.tilesOnTheBoard)}
             </div>
         )
     }

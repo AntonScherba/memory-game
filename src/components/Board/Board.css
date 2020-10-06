@@ -1,10 +1,11 @@
 .board {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-content: center;
+    display: grid;
+    /* grid-template-columns: repeat(4, auto);
+    grid-template-rows: repeat(4, auto); */
+    grid-gap: 3px;
+    background: gainsboro;
     width: 600px;
     height: 600px;
-    border: 2px solid black;
-    
 }
+
+

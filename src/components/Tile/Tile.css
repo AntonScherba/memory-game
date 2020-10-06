@@ -1,9 +1,21 @@
-
 button {
-    border: 1px solid black;
-    margin: 15px;
-    outline: none;
     cursor: pointer;
-    height: 20%;
-    width: 20%;
+    outline: none;
+    border: none;
+    background: #f1f1f1;
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    border-radius: 3px;
+}
+
+button:hover {
+    filter: brightness(95%);
+  }
+  
+button:active {
+    transform: scale(0.95);
+}
+
+button:disabled {
+    cursor: default;
+    filter: brightness(100%);
 }
