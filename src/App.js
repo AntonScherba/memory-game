@@ -14,6 +14,10 @@ class App extends Component {
   handleChange = (event) => {
     let gridSize = event.target.value.split(/[^0-9-]+/g, 2);
 
+    for (let i = 0; i < gridSize.length; i++) {
+      gridSize[i] = Number(gridSize[i]);
+    }
+    
     this.setState({
       gridSize: gridSize,
     })
@@ -42,15 +46,6 @@ class App extends Component {
         />
       )
     }
-    // return (
-    //   <div>
-    //     <Form 
-    //         onInputChange={this.handleChange} 
-    //         onButtonSubmit={this.handleSubmit}
-    //     />
-    //     <Board gridSize={this.state.gridSize} />
-    //   </div>
-    // ) 
   }
 }
 

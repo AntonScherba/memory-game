@@ -1,57 +1,42 @@
 import React, { Component } from 'react';
 import Tile from '../Tile/Tile';
+import {shuffleColors} from '../function'
+import {colorsGenerator} from '../function'
 import './Board.css';
 
 class Board extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            tilesOnTheBoard: []
+            tilesOnTheBoard: [],
+            isOpenedTilesNow: []
         }
-    }
+    }    
 
-    // Fisher–Yates Shuffle
-    shuffleColors = (colors) => {
-        for (let i = colors.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        // let t = array[i]; array[i] = array[j]; array[j] = t
-        [colors[i], colors[j]] = [colors[j], colors[i]];
-        }
-        return colors;
-    }
-
-    colorsGenerator = (gridSize) => {
-        const numberOfColors = (gridSize[0]*gridSize[1])/2;
-        let colors = [];
-
-        for (let i = 0; i < numberOfColors; i++) {
-            const hueColor = i * 360/numberOfColors;
-            colors.push(hueColor);
-        }
-        // return duplicate colors     
-        return colors.concat(colors); 
-    }
-
-    tilesGenerator = (gridSize) => {
-        let [row, column] = gridSize;
+    tilesGenerator = (colors) => {
         let tilesOnTheBoard = [];
-        
-        for (let i = 0; i < row; i++) {
-            let tilesOnTheRow = [];
-            for (let j = 0; j < column; j++) {
-                let tile = {
-                    color: 0,
-                    isOpened:false
-                };
-                tilesOnTheRow.push(tile);
-            }
-            tilesOnTheBoard.push(tilesOnTheRow);
+
+        for (let i = 0; i < colors.length; i++) {
+            let tile = {
+                color: colors[i],
+                isOpened: false
+            };
+            tilesOnTheBoard.push(tile);
         }
+
         return tilesOnTheBoard;
     }
 
     init = () => {
-        const tilesOnTheBoard = this.tilesGenerator(this.props.gridSize);
+        // generate colors array for tiles
+        let colors = colorsGenerator(this.props.gridSize);
+        // duplicate colors array 
+        colors = colors.concat(colors);
+        // generate tiles array 
+        let tilesOnTheBoard = this.tilesGenerator(colors);
+        // shuffle tiles
+        tilesOnTheBoard = shuffleColors(tilesOnTheBoard);
+
         this.setState({tilesOnTheBoard: tilesOnTheBoard});
     }
 
@@ -59,38 +44,55 @@ class Board extends Component {
         this.init();
     }
 
-    handleClick(i, j) { 
+    handleClick(i) { 
         const tilesOnTheBoard = this.state.tilesOnTheBoard.slice();
-        tilesOnTheBoard[i][j].isOpened = !tilesOnTheBoard[i][j].isOpened;
+        let isOpenedTilesNow = this.state.isOpenedTilesNow.slice();
+
+        if (isOpenedTilesNow.length === 2) {
+            return;
+        }
+
+        tilesOnTheBoard[i].isOpened = true;
+        isOpenedTilesNow.push(i);
         
         this.setState({
-            tilesOnTheBoard: tilesOnTheBoard
+            tilesOnTheBoard: tilesOnTheBoard,
+            isOpenedTilesNow: isOpenedTilesNow
         })
-        
+
+        if (isOpenedTilesNow.length === 2) {
+            this.compareTiles(tilesOnTheBoard, isOpenedTilesNow);            
+        }
+
     }
 
-    compareColors = (openedTiles, activeTiles) => {
-        let [f, s] = openedTiles;
-        
-        if (this.state.colors[f] !== this.state.colors[s]) {            
+    compareTiles = (tilesOnTheBoard, openedTilesIndex) => {
+        let [firstTileIndex, secondTileIndex] = openedTilesIndex;
+
+        if (tilesOnTheBoard[firstTileIndex].color !== tilesOnTheBoard[secondTileIndex].color) {            
             setTimeout(() => {
-                [activeTiles[f], activeTiles[s]] = [!activeTiles[f], !activeTiles[s]] 
-                this.setState({ activeTiles: activeTiles })
-            }, 1000)
+                [tilesOnTheBoard[firstTileIndex].isOpened, tilesOnTheBoard[secondTileIndex].isOpened] = [false, false] 
+                this.setState({
+                    tilesOnTheBoard: tilesOnTheBoard,
+                    isOpenedTilesNow: []
+                })
+            }, 500)
+        } else {
+            this.setState({
+                isOpenedTilesNow: []
+            })
         }
     }
 
     renderTile = (tilesOnTheBoard) => {
-        const tile = tilesOnTheBoard.map((tilesOnTheRow, i) => {
-            return tilesOnTheRow.map((tile, j) => {
+        const tile = tilesOnTheBoard.map((tile, i) => {
                 return <Tile
-                    key={j} 
+                    key={i} 
                     color={tile.color}  
-                    onClick={() => this.handleClick(i, j)} 
-                    isOpened={this.state.tilesOnTheBoard[i][j].isOpened} 
+                    onClick={() => this.handleClick(i)} 
+                    isOpened={this.state.tilesOnTheBoard[i].isOpened} 
                 />
-            }, i)
-        })
+            })
         return tile;
     }
 
