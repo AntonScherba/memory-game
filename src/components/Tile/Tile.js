@@ -1,13 +1,12 @@
 import React from 'react';
-import './Tile.css';
 
-const Tile = ({ color, onClick, isOpened}) => {
+const Tile = ({ color, onClick, isOpened }) => {
   return(
     <button
       disabled={isOpened}
       style={{background: isOpened ? `hsl(${color}, 90%, 60%)` : '#fff'}}
       onClick={onClick}
-  >{color}</button>
+    />
   )
 }
 

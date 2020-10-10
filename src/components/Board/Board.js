@@ -9,7 +9,8 @@ class Board extends Component {
         super(props);
         this.state = {
             tilesOnTheBoard: [],
-            isOpenedTilesNow: []
+            isOpenedTilesNow: [],
+            counterPair: 0,
         }
     }    
 
@@ -45,7 +46,7 @@ class Board extends Component {
     }
 
     handleClick(i) { 
-        const tilesOnTheBoard = this.state.tilesOnTheBoard.slice();
+        let tilesOnTheBoard = this.state.tilesOnTheBoard.slice();
         let isOpenedTilesNow = this.state.isOpenedTilesNow.slice();
 
         if (isOpenedTilesNow.length === 2) {
@@ -53,34 +54,33 @@ class Board extends Component {
         }
 
         tilesOnTheBoard[i].isOpened = true;
-        isOpenedTilesNow.push(i);
-        
+        isOpenedTilesNow.push(tilesOnTheBoard[i]);
+
         this.setState({
             tilesOnTheBoard: tilesOnTheBoard,
             isOpenedTilesNow: isOpenedTilesNow
         })
 
         if (isOpenedTilesNow.length === 2) {
-            this.compareTiles(tilesOnTheBoard, isOpenedTilesNow);            
+            this.compareTiles(isOpenedTilesNow); 
         }
-
     }
 
-    compareTiles = (tilesOnTheBoard, openedTilesIndex) => {
-        let [firstTileIndex, secondTileIndex] = openedTilesIndex;
-
-        if (tilesOnTheBoard[firstTileIndex].color !== tilesOnTheBoard[secondTileIndex].color) {            
+    compareTiles = (openedTilesIndex) => {
+        let [firstTile, secondTile] = openedTilesIndex;
+        
+        if (firstTile.color === secondTile.color) {
+            this.setState({
+                isOpenedTilesNow: [],
+                counterPair: this.state.counterPair+1,
+            });
+        } else {
             setTimeout(() => {
-                [tilesOnTheBoard[firstTileIndex].isOpened, tilesOnTheBoard[secondTileIndex].isOpened] = [false, false] 
+                [firstTile.isOpened, secondTile.isOpened] = [false, false] 
                 this.setState({
-                    tilesOnTheBoard: tilesOnTheBoard,
                     isOpenedTilesNow: []
                 })
             }, 500)
-        } else {
-            this.setState({
-                isOpenedTilesNow: []
-            })
         }
     }
 
@@ -97,15 +97,30 @@ class Board extends Component {
     }
 
     render() {
-        return (
-            <div 
-                style={{
-                    gridTemplateColumns: `repeat(${this.props.gridSize[0]}, auto)`, 
-                    gridTemplateRows: `repeat(${this.props.gridSize[1]}, auto)`
-                }} 
-                className="board" >{this.renderTile(this.state.tilesOnTheBoard)}
-            </div>
-        )
+        const counterPair = this.state.counterPair;
+        const tilePair = this.state.tilesOnTheBoard.length/2;
+        if (tilePair > counterPair) {
+            return (
+                <div>
+                    <button className="btn-new-game" onClick={() => {this.props.init()}} >New Game</button>
+                <div 
+                    style={{
+                        gridTemplateColumns: `repeat(${this.props.gridSize[0]}, auto)`, 
+                        gridTemplateRows: `repeat(${this.props.gridSize[1]}, auto)`
+                    }} 
+                    className="board"
+                >{this.renderTile(this.state.tilesOnTheBoard)}
+                </div>
+                </div>
+            )
+        } else {
+            return (
+                <div className="show" >
+                    <p>Congratulations!</p>
+                    <button className="btn-new-game" onClick={() => {this.props.init()}} >New Game</button>
+                </div>    
+            )         
+        }
     }
 }
 

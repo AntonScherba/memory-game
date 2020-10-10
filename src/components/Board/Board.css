@@ -1,11 +1,27 @@
 .board {
     display: grid;
-    /* grid-template-columns: repeat(4, auto);
-    grid-template-rows: repeat(4, auto); */
-    grid-gap: 3px;
-    background: gainsboro;
-    width: 600px;
-    height: 600px;
+    grid-gap: 4px;
+    min-width: 550px; 
+    min-height: 550px;
 }
 
+.btn-new-game {
+    border-radius: 0;
+    background-color: gray;
+    padding: 5px;
+    margin-bottom: 5px;
+    color: white;
+    font-size: 1rem;
+}
+
+.show {
+    opacity: 0;
+    /* @keyframes name | duration | iteration-count | fill-mode | */
+    animation: show 3s 1 forwards;
+}  
+
+@keyframes show {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
 

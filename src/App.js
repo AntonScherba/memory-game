@@ -17,16 +17,16 @@ class App extends Component {
     for (let i = 0; i < gridSize.length; i++) {
       gridSize[i] = Number(gridSize[i]);
     }
-    
     this.setState({
       gridSize: gridSize,
     })
   }
   
   handleSubmit = () => {
-
-    if ((this.state.gridSize[0]*this.state.gridSize[1])%2) {
-      console.log('grid size must be an even!')
+    if (this.state.gridSize[0] === 0 || this.state.gridSize[1] === 0) {
+      alert('Row or column is 0!');
+    } else if ((this.state.gridSize[0]*this.state.gridSize[1])%2) {
+      alert('Grid size must be an even!');
     } else {
       this.setState({
         isStart: true,
@@ -34,13 +34,19 @@ class App extends Component {
     }
   }  
 
-  render() {
+  init = () => {
+    this.setState({
+      gridSize: [4, 4],
+      isStart: false,
+    })
+  }
 
+  render() {
     if (this.state.isStart) {
-      return <Board gridSize={this.state.gridSize} />
+      return <Board init={this.init} gridSize={this.state.gridSize} />
     } else {
       return (
-        <Form 
+        <Form
             onInputChange={this.handleChange} 
             onButtonSubmit={this.handleSubmit}
         />
