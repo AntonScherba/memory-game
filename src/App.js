@@ -1,57 +1,75 @@
-import React, { Component } from 'react';
+import React, { useReducer } from 'react';
 import Form from './components/Form/Form';
 import Board from './components/Board/Board';
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      gridSize: [4, 4],
-      isStart: false,
-    }
+const initialState = {
+  gridSize: [4, 4],
+  isStart: false,
+}
+
+function reducer (state, action) {
+  switch (action.type) {
+    case 'START':
+      return handleSubmit(state);
+    case 'CHANGE':
+      return  handleChange(action.payload, state);
+    case 'NEW_GAME':
+      return initialState;
+    default:
+      return state;
+  }
+}
+
+function handleChange(event, state) {
+  console.log(state);
+  let gridSize = event.split(/[^0-9-]+/g, 2);
+
+  for (let i = 0; i < gridSize.length; i++) {
+    gridSize[i] = Number(gridSize[i]);
   }
 
-  handleChange = (event) => {
-    let gridSize = event.target.value.split(/[^0-9-]+/g, 2);
-
-    for (let i = 0; i < gridSize.length; i++) {
-      gridSize[i] = Number(gridSize[i]);
-    }
-    this.setState({
-      gridSize: gridSize,
-    })
+  return {...state,
+    gridSize: gridSize,
   }
+}
+
+function handleSubmit(state) {
   
-  handleSubmit = () => {
-    if (this.state.gridSize[0] === 0 || this.state.gridSize[1] === 0) {
-      alert('Row or column is 0!');
-    } else if ((this.state.gridSize[0]*this.state.gridSize[1])%2) {
-      alert('Grid size must be an even!');
-    } else {
-      this.setState({
-        isStart: true,
-      })
+  if (state.gridSize[0] === 0 || state.gridSize[1] === 0) {
+    alert('Row or column is 0!');
+    return {
+      ...state
     }
-  }  
-
-  init = () => {
-    this.setState({
-      gridSize: [4, 4],
-      isStart: false,
-    })
+  } else if ((state.gridSize[0]*state.gridSize[1])%2) {
+    alert('Grid size must be an even!');
+    return {
+      ...state
+    }
+  } else {
+    return {...state,
+      isStart: true,
+    }
   }
+} 
 
-  render() {
-    if (this.state.isStart) {
-      return <Board init={this.init} gridSize={this.state.gridSize} />
-    } else {
-      return (
-        <Form
-            onInputChange={this.handleChange} 
-            onButtonSubmit={this.handleSubmit}
-        />
-      )
-    }
+const App = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const newGame = () => dispatch({type: 'NEW_GAME'});
+
+  const onInputChange = (event) => dispatch({type: 'CHANGE', payload: event.target.value});
+
+  const onButtonSubmit = () => dispatch({type: 'START'});
+
+  if (state.isStart) {
+    return <Board newGame={newGame}  gridSize={state.gridSize} />
+  } else {
+    return (
+      <Form
+          onInputChange={onInputChange} 
+          onButtonSubmit={onButtonSubmit}
+      />
+    )
   }
 }
 

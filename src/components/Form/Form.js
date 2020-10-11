@@ -2,7 +2,6 @@ import React from 'react';
 import './Form.css';
 
 const Form = ({onInputChange, onButtonSubmit}) => {
-    
     return (
         <div>
             <p className="text">Enter grid size and press Start button</p>
