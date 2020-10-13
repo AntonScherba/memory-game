@@ -8,8 +8,8 @@ export const shuffleColors = (colors) => {
     return colors;
 }
 
-export const colorsGenerator = (gridSize) => {
-    const numberOfColors = (gridSize[0]*gridSize[1])/2;
+export const colorsGenerator = (column, row) => {
+    const numberOfColors = (column*row)/2;
     let colors = [];
     
     for (let i = 0; i < numberOfColors; i++) {

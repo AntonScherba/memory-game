@@ -1,74 +1,57 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import Form from './components/Form/Form';
 import Board from './components/Board/Board';
+import { shuffleColors, colorsGenerator } from './functions';
+import { Context } from './context';
+
+import reducer from './reducer';
 
 const initialState = {
-  gridSize: [4, 4],
+  column: 4,
+  row: 4,
   isStart: false,
+  tilesOnTheBoard: [],
+  pairOpenedTiles: [],
+  pairCounter: 0,
 }
-
-function reducer (state, action) {
-  switch (action.type) {
-    case 'START':
-      return handleSubmit(state);
-    case 'CHANGE':
-      return  handleChange(action.payload, state);
-    case 'NEW_GAME':
-      return initialState;
-    default:
-      return state;
-  }
-}
-
-function handleChange(event, state) {
-  console.log(state);
-  let gridSize = event.split(/[^0-9-]+/g, 2);
-
-  for (let i = 0; i < gridSize.length; i++) {
-    gridSize[i] = Number(gridSize[i]);
-  }
-
-  return {...state,
-    gridSize: gridSize,
-  }
-}
-
-function handleSubmit(state) {
-  
-  if (state.gridSize[0] === 0 || state.gridSize[1] === 0) {
-    alert('Row or column is 0!');
-    return {
-      ...state
-    }
-  } else if ((state.gridSize[0]*state.gridSize[1])%2) {
-    alert('Grid size must be an even!');
-    return {
-      ...state
-    }
-  } else {
-    return {...state,
-      isStart: true,
-    }
-  }
-} 
 
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const newGame = () => dispatch({type: 'NEW_GAME'});
+  useEffect(() => {
+    dispatch({type: 'INIT_TILES', payload: init(state.column, state.row)})
+  }, [state.column, state.row])
 
-  const onInputChange = (event) => dispatch({type: 'CHANGE', payload: event.target.value});
+const tilesGenerator = (colors) => {
+    let tilesOnTheBoard = [];
+    for (let i = 0; i < colors.length; i++) {
+        tilesOnTheBoard.push({color: colors[i], isOpened: false});
+    }
+    return tilesOnTheBoard;
+}
 
-  const onButtonSubmit = () => dispatch({type: 'START'});
-
+const init = (column, row) => {
+    // generate colors array for tiles
+    let colors = colorsGenerator(column, row);
+    // duplicate colors array 
+    colors = colors.concat(colors);
+    // generate tiles array 
+    let tilesOnTheBoard = tilesGenerator(colors);
+    // shuffle tiles
+    tilesOnTheBoard = shuffleColors(tilesOnTheBoard);
+    return tilesOnTheBoard;
+}
   if (state.isStart) {
-    return <Board newGame={newGame}  gridSize={state.gridSize} />
+    return (
+      <Context.Provider value={dispatch}>
+        <Board tiles={state.tilesOnTheBoard} column={state.column} row={state.row} />
+      </Context.Provider>
+    )
   } else {
     return (
-      <Form
-          onInputChange={onInputChange} 
-          onButtonSubmit={onButtonSubmit}
-      />
+      <Context.Provider value={dispatch}>
+        <Form column={state.column} row={state.row} />
+      </Context.Provider>
     )
   }
 }

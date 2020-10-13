@@ -35,8 +35,7 @@ button:disabled {
     filter: brightness(100%);
 }
 
-p {
-    font-weight: 600;
+h1 {
     font-size: 2rem;
     border-bottom: 1.5px solid black;
     cursor: default;

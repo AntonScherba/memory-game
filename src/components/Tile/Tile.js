@@ -6,7 +6,7 @@ const Tile = ({ color, onClick, isOpened }) => {
       disabled={isOpened}
       style={{background: isOpened ? `hsl(${color}, 90%, 60%)` : '#fff'}}
       onClick={onClick}
-    />
+    >{color}</button>
   )
 }
 
