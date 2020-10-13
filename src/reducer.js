@@ -29,6 +29,23 @@ export default function(state, action) {
             ...state,
             tilesOnTheBoard: action.payload,
           }
+        case 'IS_OPENED':
+          return {
+            ...state,
+            tilesOnTheBoard: action.payload.tile,
+            pairOpenedTiles: action.payload.pairOpenedTiles
+          }
+        case 'COMPARE_TRUE':
+          return {
+            ...state,
+            pairOpenedTiles: [],
+            pairCounter: state.pairCounter+1,
+          }
+        case 'COMPARE_FALSE':
+          return {
+            ...state,
+            pairOpenedTiles: [],
+          }
       default:
         return state;
     }

@@ -17,34 +17,35 @@ const initialState = {
 
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  console.log(state)
   useEffect(() => {
     dispatch({type: 'INIT_TILES', payload: init(state.column, state.row)})
   }, [state.column, state.row])
 
-const tilesGenerator = (colors) => {
-    let tilesOnTheBoard = [];
-    for (let i = 0; i < colors.length; i++) {
-        tilesOnTheBoard.push({color: colors[i], isOpened: false});
-    }
-    return tilesOnTheBoard;
-}
+  const tilesGenerator = (colors) => {
+      let tilesOnTheBoard = [];
+      for (let i = 0; i < colors.length; i++) {
+          tilesOnTheBoard.push({color: colors[i], isOpened: false});
+      }
+      return tilesOnTheBoard;
+  }
 
-const init = (column, row) => {
-    // generate colors array for tiles
-    let colors = colorsGenerator(column, row);
-    // duplicate colors array 
-    colors = colors.concat(colors);
-    // generate tiles array 
-    let tilesOnTheBoard = tilesGenerator(colors);
-    // shuffle tiles
-    tilesOnTheBoard = shuffleColors(tilesOnTheBoard);
-    return tilesOnTheBoard;
-}
+  const init = (column, row) => {
+      // generate colors array for tiles
+      let colors = colorsGenerator(column, row);
+      // duplicate colors array 
+      colors = colors.concat(colors);
+      // generate tiles array 
+      let tilesOnTheBoard = tilesGenerator(colors);
+      // shuffle tiles
+      tilesOnTheBoard = shuffleColors(tilesOnTheBoard);
+      return tilesOnTheBoard;
+  }
+
   if (state.isStart) {
     return (
       <Context.Provider value={dispatch}>
-        <Board tiles={state.tilesOnTheBoard} column={state.column} row={state.row} />
+        <Board state={state} />
       </Context.Provider>
     )
   } else {
