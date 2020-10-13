@@ -25,3 +25,13 @@
     to {opacity: 1;}
 }
 
+.hide {
+    opacity: 1;
+    /* @keyframes name | duration | iteration-count | fill-mode | */
+    animation: show 3s 1 forwards;
+}  
+
+@keyframes show {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}

@@ -17,25 +17,25 @@ const Form = ({column, row}) => {
     return (
         <form onSubmit={onFormSubmit}>
             <h1 className="text">Enter grid size and press Start button</h1>
-            <p>{`The Grid Size is ${column}x${row}`}</p>
-            <label className="lable" htmlFor="column">Column (between 1 and 10)</label>
-            <input
-                type="number" 
-                name="column"
-                value={column}
-                onChange={e => dispatch({type: 'CHANGE_COLUMN', payload: Number(e.target.value)})} 
-                min="1" 
-                max="10"
-            />            
-            <label className="lable" htmlFor="row">Row (between 1 and 10)</label>
-            <input
-                type="number"
-                name="row" 
-                value={row}
-                onChange={e => dispatch({type: 'CHANGE_ROW', payload: Number(e.target.value)})} 
-                min="1" 
-                max="10"
-            />
+            <h3>{`The Grid Size is ${column}x${row}`}</h3>
+                <div>
+                    <input
+                        className="input-number"
+                        type="number" 
+                        value={column}
+                        onChange={e => dispatch({type: 'CHANGE_COLUMN', payload: Number(e.target.value)})} 
+                        min="1" 
+                        max="10"
+                    />            
+                    <input
+                        className="input-number"
+                        type="number"
+                        value={row}
+                        onChange={e => dispatch({type: 'CHANGE_ROW', payload: Number(e.target.value)})} 
+                        min="1" 
+                        max="10"
+                    />
+                </div>
             <button className="btn-start" type="submit">Start</button>
         </form>        
     ) 

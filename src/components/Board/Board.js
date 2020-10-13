@@ -25,7 +25,6 @@ const Board = ({state}) => {
         }
     }
 
-
     const compareTiles = (pairOpenedTiles) => {
         let [firstTile, secondTile] = pairOpenedTiles;
         

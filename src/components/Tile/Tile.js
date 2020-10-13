@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Tile = ({ color, onClick, isOpened }) => {
+const Tile = ({ color, onClick, isOpened,  }) => {
   return(
     <button
       disabled={isOpened}
