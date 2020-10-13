@@ -32,7 +32,7 @@ export default function(state, action) {
         case 'IS_OPENED':
           return {
             ...state,
-            tilesOnTheBoard: action.payload.tile,
+            tilesOnTheBoard: action.payload.tiles,
             pairOpenedTiles: action.payload.pairOpenedTiles
           }
         case 'COMPARE_TRUE':

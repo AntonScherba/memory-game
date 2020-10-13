@@ -18,7 +18,7 @@ const initialState = {
 const App = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   
-  console.log(state)
+  console.log('app: ', state.tilesOnTheBoard)
 
   useEffect(() => {
     dispatch({type: 'INIT_TILES', payload: init(state.column, state.row)})
