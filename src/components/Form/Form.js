@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
 import { Context } from '../../context';
+import { init } from '../../functions';
+
 import './Form.css';
 
 const Form = ({column, row}) => {
@@ -10,7 +12,7 @@ const Form = ({column, row}) => {
         if ((column*row)%2) {
             alert('Grid Size Must be EVEN!');
         } else {
-            dispatch({type: 'START_GAME'})
+            dispatch({type: 'START_GAME', payload: init(column, row)})
         }
     }
 

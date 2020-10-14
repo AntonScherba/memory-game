@@ -1,57 +1,58 @@
 import React, { useContext } from 'react';
 import Tile from '../Tile/Tile';
-import { Context } from '../../context'
-
+import NewGameButton from '../NewGameButton/NewGameButton';
+import { Context } from '../../context';
 import './Board.css';
 
-const Board = ({state}) => {
+const Board = ({ column, row, tilesOnTheBoard, pairOpenedTiles, pairCounter }) => {
     const dispatch = useContext(Context);
     
-    const onClick = (i) => {
-        const tiles = JSON.parse(JSON.stringify(state.tilesOnTheBoard));
-        let pairOpenedTiles = JSON.parse(JSON.stringify(state.pairOpenedTiles));
+    const onTileClick = (i) => {
+        // Deep copy tilesOnTheBoard and pairOpenedTiles arrays
+        const tiles = JSON.parse(JSON.stringify(tilesOnTheBoard));
+        let pairOpenedTilesCopy = JSON.parse(JSON.stringify(pairOpenedTiles));
 
-        console.log('board: ', pairOpenedTiles)
-        if (pairOpenedTiles.length === 2) {
+        if (pairOpenedTilesCopy.length === 2) {
             return;
         }
 
         tiles[i].isOpened = true;
-        pairOpenedTiles.push(i);
+        pairOpenedTilesCopy.push(i);
 
-        dispatch({type: 'IS_OPENED', payload: {tiles, pairOpenedTiles}})
+        dispatch({type: 'IS_OPENED', payload: {tiles: tiles, pairOpenedTiles: pairOpenedTilesCopy}})
 
-        if (pairOpenedTiles.length === 2) {
-            compareTiles(pairOpenedTiles, tiles);
+        if (pairOpenedTilesCopy.length === 2) {
+            compareTiles(pairOpenedTilesCopy, tiles);
         }
     }
 
-    const compareTiles = (pairOpenedTiles, tiles) => {
-        let [firstTile, secondTile] = [tiles[pairOpenedTiles[0]], tiles[pairOpenedTiles[1]]];
+    const compareTiles = (openedTiles, tiles) => {
+        let [firstTile, secondTile] = [tiles[openedTiles[0]], tiles[openedTiles[1]]];
 
         if (firstTile.color === secondTile.color) {
-            dispatch({type: 'COMPARE_TRUE'})
+            dispatch({type: 'INCREASE_PAIR_COUNTER'})
+            dispatch({type: 'RESET_PAIR_OPENED_TILES'})
         } else {
             setTimeout(() => {
                 [firstTile.isOpened, secondTile.isOpened] = [false, false];
-                dispatch({type: 'COMPARE_FALSE'})
+                dispatch({type: 'RESET_PAIR_OPENED_TILES'})
             }, 500)
         }
     }
 
-    if (state.pairCounter < state.tilesOnTheBoard.length/2) {
+    if (pairCounter < tilesOnTheBoard.length/2) {
         return (
             <div>
-                <button className="btn-new-game" onClick={() => dispatch({type: 'NEW_GAME'})}>New Game</button>
+                <NewGameButton />
                 <div 
                     style={{
-                        gridTemplateColumns: `repeat(${state.column}, auto)`, 
-                        gridTemplateRows: `repeat(${state.row}, auto)`
+                        gridTemplateColumns: `repeat(${column}, auto)`, 
+                        gridTemplateRows: `repeat(${row}, auto)`
                     }} 
                     className="board"
                 >
-                {state.tilesOnTheBoard.map((tile, i) => {
-                   return <Tile key={i} color={tile.color} isOpened={tile.isOpened} onClick={() => onClick(i)} />
+                {tilesOnTheBoard.map((tile, i) => {
+                    return <Tile key={i} color={tile.color} isOpened={tile.isOpened} onClick={() => onTileClick(i)} />
                 })}
                 </div>
             </div>
@@ -60,9 +61,9 @@ const Board = ({state}) => {
         return (
             <div className="show" >
                 <h1>Congratulations!</h1>
-                <button className="btn-new-game" onClick={() => dispatch({type: 'NEW_GAME'})}>New Game</button>
+                <NewGameButton />
             </div>    
-        ) 
+        )
     }
 
 }
