@@ -1,72 +1,89 @@
-import React, { useContext } from 'react';
-import Tile from '../Tile/Tile';
-import NewGameButton from '../NewGameButton/NewGameButton';
-import { Context } from '../../context';
-import './Board.css';
+import React, { useContext } from "react";
+import Tile from "../Tile/Tile";
+import NewGameButton from "../NewGameButton/NewGameButton";
+import { Context } from "../../context";
+import "./Board.css";
 
-const Board = ({ column, row, tilesOnTheBoard, pairOpenedTiles, pairCounter }) => {
-    const dispatch = useContext(Context);
-    
-    const onTileClick = (i) => {
-        // Deep copy tilesOnTheBoard and pairOpenedTiles arrays
-        const tiles = JSON.parse(JSON.stringify(tilesOnTheBoard));
-        let pairOpenedTilesCopy = JSON.parse(JSON.stringify(pairOpenedTiles));
+const Board = ({
+  column,
+  row,
+  tilesOnTheBoard,
+  pairOpenedTiles,
+  isGameOver,
+}) => {
 
-        if (pairOpenedTilesCopy.length === 2) {
-            return;
-        }
+  const dispatch = useContext(Context);
 
-        tiles[i].isOpened = true;
-        pairOpenedTilesCopy.push(i);
+  const onTileClick = (i) => {
+    // Deep copy tilesOnTheBoard and pairOpenedTiles arrays
+    const tiles = JSON.parse(JSON.stringify(tilesOnTheBoard));
+    let pairOpenedTilesCopy = JSON.parse(JSON.stringify(pairOpenedTiles));
 
-        dispatch({type: 'IS_OPENED', payload: {tiles: tiles, pairOpenedTiles: pairOpenedTilesCopy}})
-
-        if (pairOpenedTilesCopy.length === 2) {
-            compareTiles(pairOpenedTilesCopy, tiles);
-        }
+    if (pairOpenedTilesCopy.length === 2) {
+      return;
     }
 
-    const compareTiles = (openedTiles, tiles) => {
-        let [firstTile, secondTile] = [tiles[openedTiles[0]], tiles[openedTiles[1]]];
+    tiles[i].isOpened = true;
+    pairOpenedTilesCopy.push(i);
 
-        if (firstTile.color === secondTile.color) {
-            dispatch({type: 'INCREASE_PAIR_COUNTER'})
-            dispatch({type: 'RESET_PAIR_OPENED_TILES'})
-        } else {
-            setTimeout(() => {
-                [firstTile.isOpened, secondTile.isOpened] = [false, false];
-                dispatch({type: 'RESET_PAIR_OPENED_TILES'})
-            }, 500)
-        }
+    dispatch({
+      type: "IS_OPENED",
+      payload: { tiles: tiles, pairOpenedTiles: pairOpenedTilesCopy },
+    });
+
+    if (pairOpenedTilesCopy.length === 2) {
+      compareTiles(pairOpenedTilesCopy, tiles);
     }
+  };
 
-    if (pairCounter < tilesOnTheBoard.length/2) {
-        return (
-            <div>
-                <NewGameButton />
-                <div 
-                    style={{
-                        gridTemplateColumns: `repeat(${column}, auto)`, 
-                        gridTemplateRows: `repeat(${row}, auto)`
-                    }} 
-                    className="board"
-                >
-                {tilesOnTheBoard.map((tile, i) => {
-                    return <Tile key={i} color={tile.color} isOpened={tile.isOpened} onClick={() => onTileClick(i)} />
-                })}
-                </div>
-            </div>
-        )
+  const compareTiles = (openedTiles, tiles) => {
+    let [firstTile, secondTile] = [
+      tiles[openedTiles[0]],
+      tiles[openedTiles[1]],
+    ];
+
+    if (firstTile.color === secondTile.color) {
+      [firstTile.isHidden, secondTile.isHidden] = [true, true];
+      dispatch({ type: "INCREASE_PAIR_COUNTER" });
+      dispatch({ type: "RESET_PAIR_OPENED_TILES" });
+      dispatch({ type: "CHECK_GAME_OVER" });
     } else {
-        return (
-            <div className="show" >
-                <h1>Congratulations!</h1>
-                <NewGameButton />
-            </div>    
-        )
+      setTimeout(() => {
+        [firstTile.isOpened, secondTile.isOpened] = [false, false];
+        dispatch({ type: "RESET_PAIR_OPENED_TILES" });
+      }, 500);
     }
+  };
 
-}
+  if (isGameOver) {
+    return (
+      <div className="show">
+        <h1>Congratulations!</h1>
+        <NewGameButton />
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <NewGameButton />
+        <div className="board">
+          {tilesOnTheBoard.map((tile, i) => {
+            return (
+              <Tile
+                key={i}
+                color={tile.color}
+                isOpened={tile.isOpened}
+                onClick={() => onTileClick(i)}
+                column={column}
+                row={row}
+                isHidden={tile.isHidden}
+              />
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+};
 
 export default Board;
-

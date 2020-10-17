@@ -1,15 +1,15 @@
 .input-number {
-    padding: 6px;
-    border: solid 1px;
-    font-size: 1.3rem;
-    width: 40px;
+  padding: 6px;
+  border: solid 1px;
+  font-size: 1.3rem;
+  width: 40px;
 }
 
 .btn-start {
-    border-radius: 0;
-    background-color: gray;
-    padding: 6px 15px;
-    margin-top: 20px;
-    color: white;
-    font-size: 1.5rem;
+  border-radius: 0;
+  background-color: gray;
+  padding: 6px 15px;
+  margin-top: 20px;
+  color: white;
+  font-size: 1.5rem;
 }

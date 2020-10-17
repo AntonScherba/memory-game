@@ -1,0 +1,13 @@
+.hidden {
+  /* @keyframes name | duration | iteration-count | fill-mode | */
+  animation: hide 2s 1 forwards;
+}
+
+@keyframes hide {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

@@ -1,18 +1,24 @@
 .board {
-    display: grid;
-    grid-gap: 4px;
-    width: 550px; 
-    height: 550px;
+  width: 550px;
+  height: 550px;
+  margin: auto;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
 }
 
 .show {
-    opacity: 0;
-    /* @keyframes name | duration | iteration-count | fill-mode | */
-    animation: show 3s 1 forwards;
-}  
-
-@keyframes show {
-    from {opacity: 0;}
-    to {opacity: 1;}
+  opacity: 0;
+  /* @keyframes name | duration | iteration-count | fill-mode | */
+  animation: show 3s 1 forwards;
 }
 
+@keyframes show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
