@@ -31,6 +31,10 @@ const tilesGenerator = (colors) => {
   }
   return tilesOnTheBoard;
 };
+/* JSON.parse and JSON.stringify is simple way to Deep copy. The JSON.stringify() method converts a JavaScript value to a JSON string.The JSON.parse() method parses a JSON string, constructing the JavaScript value or object described by the string. */
+export const deepCoppyArray = (array) => {
+  return JSON.parse(JSON.stringify(array));
+}
 
 export const init = (column, row) => {
   // generate colors array for tiles

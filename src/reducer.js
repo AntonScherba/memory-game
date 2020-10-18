@@ -28,12 +28,21 @@ export default function (state, action) {
         ...state,
         row: action.payload,
       };
+    case "REFRESH_PAIR_OPENED_TILES": 
+      return {
+        ...state,
+        pairOpenedTiles: action.payload,
+      }
     case "IS_OPENED":
       return {
         ...state,
-        tilesOnTheBoard: action.payload.tiles,
-        pairOpenedTiles: action.payload.pairOpenedTiles,
+        tilesOnTheBoard: action.payload,
       };
+    case "IS_HIDDEN":
+      return {
+        ...state,
+        tilesOnTheBoard: action.payload,
+      }
     case "INCREASE_PAIR_COUNTER":
       return {
         ...state,

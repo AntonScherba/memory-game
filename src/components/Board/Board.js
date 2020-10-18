@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import Tile from "../Tile/Tile";
 import NewGameButton from "../NewGameButton/NewGameButton";
 import { Context } from "../../context";
+import { deepCoppyArray } from "../../functions"
 import "./Board.css";
 
 const Board = ({
@@ -16,8 +17,8 @@ const Board = ({
 
   const onTileClick = (i) => {
     // Deep copy tilesOnTheBoard and pairOpenedTiles arrays
-    const tiles = JSON.parse(JSON.stringify(tilesOnTheBoard));
-    let pairOpenedTilesCopy = JSON.parse(JSON.stringify(pairOpenedTiles));
+    const tiles = deepCoppyArray(tilesOnTheBoard);
+    let pairOpenedTilesCopy = deepCoppyArray(pairOpenedTiles);
 
     if (pairOpenedTilesCopy.length === 2) {
       return;
@@ -26,17 +27,19 @@ const Board = ({
     tiles[i].isOpened = true;
     pairOpenedTilesCopy.push(i);
 
-    dispatch({
-      type: "IS_OPENED",
-      payload: { tiles: tiles, pairOpenedTiles: pairOpenedTilesCopy },
-    });
+    dispatch({ type: "IS_OPENED", payload: tiles})
+    dispatch({ type: "REFRESH_PAIR_OPENED_TILES", payload: pairOpenedTilesCopy });
 
     if (pairOpenedTilesCopy.length === 2) {
-      compareTiles(pairOpenedTilesCopy, tiles);
+      const tilesCopy = deepCoppyArray(tiles);
+      const openedTiles = deepCoppyArray(pairOpenedTilesCopy);
+
+      compareTiles(openedTiles, tilesCopy);
     }
   };
 
   const compareTiles = (openedTiles, tiles) => {
+    
     let [firstTile, secondTile] = [
       tiles[openedTiles[0]],
       tiles[openedTiles[1]],
@@ -44,12 +47,15 @@ const Board = ({
 
     if (firstTile.color === secondTile.color) {
       [firstTile.isHidden, secondTile.isHidden] = [true, true];
+      dispatch({ type: "IS_HIDDEN", payload: tiles })
       dispatch({ type: "INCREASE_PAIR_COUNTER" });
       dispatch({ type: "RESET_PAIR_OPENED_TILES" });
       dispatch({ type: "CHECK_GAME_OVER" });
     } else {
       setTimeout(() => {
         [firstTile.isOpened, secondTile.isOpened] = [false, false];
+        dispatch({ type: "IS_OPENED", payload: tiles})
+        dispatch({ type: "REFRESH_PAIR_OPENED_TILES", payload: openedTiles });
         dispatch({ type: "RESET_PAIR_OPENED_TILES" });
       }, 500);
     }
