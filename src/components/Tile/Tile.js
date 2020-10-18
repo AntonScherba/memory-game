@@ -12,7 +12,7 @@ const Tile = ({ color, onClick, isOpened, column, row, isHidden }) => {
         background: isOpened ? `hsl(${color}, 90%, 60%)` : "#fff",
       }}
       onClick={onClick}
-    >{color}</button>
+    />
   );
 };
 
