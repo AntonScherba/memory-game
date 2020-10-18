@@ -10,19 +10,19 @@ const App = () => {
   const {
     column,
     row,
-    tilesOnTheBoard,
+    tilesOnBoard,
     pairOpenedTiles,
     isStart,
     isGameOver,
   } = state;
-  
+
   if (isStart) {
     return (
       <Context.Provider value={dispatch}>
         <Board
           column={column}
           row={row}
-          tilesOnTheBoard={tilesOnTheBoard}
+          tilesOnBoard={tilesOnBoard}
           pairOpenedTiles={pairOpenedTiles}
           isGameOver={isGameOver}
         />

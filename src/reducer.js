@@ -2,10 +2,10 @@ export const initialState = {
   column: 4,
   row: 4,
   isStart: false,
-  tilesOnTheBoard: [],
+  tilesOnBoard: [],
   pairOpenedTiles: [],
   pairCounter: 0,
-  isGameOver: false
+  isGameOver: false,
 };
 
 export default function (state, action) {
@@ -15,7 +15,7 @@ export default function (state, action) {
     case "START_GAME":
       return {
         ...state,
-        tilesOnTheBoard: action.payload,
+        tilesOnBoard: action.payload,
         isStart: true,
       };
     case "CHANGE_COLUMN":
@@ -28,21 +28,16 @@ export default function (state, action) {
         ...state,
         row: action.payload,
       };
-    case "REFRESH_PAIR_OPENED_TILES": 
+    case "UPDATE_PAIR_OPENED_TILES":
       return {
         ...state,
         pairOpenedTiles: action.payload,
-      }
-    case "IS_OPENED":
-      return {
-        ...state,
-        tilesOnTheBoard: action.payload,
       };
-    case "IS_HIDDEN":
+    case "UPDATE_TILES_ON_BOARD":
       return {
         ...state,
-        tilesOnTheBoard: action.payload,
-      }
+        tilesOnBoard: action.payload,
+      };
     case "INCREASE_PAIR_COUNTER":
       return {
         ...state,
@@ -54,7 +49,7 @@ export default function (state, action) {
         pairOpenedTiles: [],
       };
     case "CHECK_GAME_OVER":
-      if (state.pairCounter < state.tilesOnTheBoard.length / 2) {
+      if (state.pairCounter < state.tilesOnBoard.length / 2) {
         return { ...state };
       } else {
         return {

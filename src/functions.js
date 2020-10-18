@@ -22,19 +22,25 @@ const colorsGenerator = (column, row) => {
   return colors;
 };
 
- /* tilesGenerator function receives colors array and returns objects (tiles) array. Each tile consists of a color and a certain state: open or closed, hidden or not. */
+/* tilesGenerator function receives colors array and returns objects (tiles) array. Each tile consists of a color and a certain state: open or closed, hidden or not. */
 
 const tilesGenerator = (colors) => {
   let tilesOnTheBoard = [];
   for (let i = 0; i < colors.length; i++) {
-    tilesOnTheBoard.push({ color: colors[i], isOpened: false, isHidden: false });
+    tilesOnTheBoard.push({
+      color: colors[i],
+      isOpened: false,
+      isHidden: false,
+    });
   }
   return tilesOnTheBoard;
 };
+
 /* JSON.parse and JSON.stringify is simple way to Deep copy. The JSON.stringify() method converts a JavaScript value to a JSON string.The JSON.parse() method parses a JSON string, constructing the JavaScript value or object described by the string. */
+
 export const deepCoppyArray = (array) => {
   return JSON.parse(JSON.stringify(array));
-}
+};
 
 export const init = (column, row) => {
   // generate colors array for tiles
