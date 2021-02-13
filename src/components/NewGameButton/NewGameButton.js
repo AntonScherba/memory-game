@@ -4,6 +4,7 @@ import "./NewGameButton.css";
 
 const NewGameButton = () => {
   const dispatch = useContext(Context);
+  //bal-bla
   return (
     <button
       className="btn-new-game"

@@ -31,12 +31,17 @@ const Board = ({
       payload: { tiles: tiles, pairOpenedTiles: pairOpenedTilesCopy },
     });
 
+    // Deep copy tilesOnTheBoard and pairOpenedTiles arrays
+    const tC = JSON.parse(JSON.stringify(tilesOnTheBoard));
+    let pC = JSON.parse(JSON.stringify(pairOpenedTiles));
+
     if (pairOpenedTilesCopy.length === 2) {
-      compareTiles(pairOpenedTilesCopy, tiles);
+      compareTiles(pC, tC);
     }
   };
 
   const compareTiles = (openedTiles, tiles) => {
+    console.log(openedTiles, tiles);
     let [firstTile, secondTile] = [
       tiles[openedTiles[0]],
       tiles[openedTiles[1]],
